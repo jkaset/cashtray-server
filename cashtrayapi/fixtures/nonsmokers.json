@@ -1,0 +1,14 @@
+[
+  {
+      "model": "cashtrayapi.Nonsmoker",
+      "pk": 1,
+      "fields": {
+          "user": 1,
+          "quit_date": "2020-10-29T13:24:27.172Z",
+          "cigs_per_day": 20,
+          "price_per_pack": 7.60,
+          "cigs_per_pack": 20,
+          "start_smoking_year": "1994-10-29"
+      }
+  }
+]

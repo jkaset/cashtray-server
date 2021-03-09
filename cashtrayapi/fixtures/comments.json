@@ -1,0 +1,32 @@
+[
+  {
+      "model": "cashtrayapi.comment",
+      "pk": 1,
+      "fields": {
+          "recipient": 1,
+          "commenter": 1,
+          "comment": "The worst is over! Keep going!",
+          "created_on": "2021-03-14"
+      }
+  },
+  {
+      "model": "cashtrayapi.comment",
+      "pk": 2,
+      "fields": {
+          "recipient": 2,
+          "commenter": 1,
+          "comment": "How'd you do it?",
+          "created_on": "2021-03-16"
+      }
+  },
+  {
+      "model": "cashtrayapi.comment",
+      "pk": 3,
+      "fields": {
+          "recipient": 1,
+          "commenter": 2,
+          "comment": "We got this!",
+          "created_on": "2021-03-17"
+      }
+  }
+]

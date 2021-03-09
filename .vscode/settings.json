@@ -1,0 +1,11 @@
+{
+  "python.pythonPath": "/Users/jasminkaset/.local/share/virtualenvs/cashtray-vFtvPQBI/bin/python",
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "name": "cashtray",
+      "database": "db.sqlite3"
+    }
+  ]
+}

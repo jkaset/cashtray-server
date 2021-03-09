@@ -1,0 +1,32 @@
+[
+  {
+      "model": "cashtrayapi.reward",
+      "pk": 1,
+      "fields": {
+          "user": 1,
+          "reward_name": "Korea House",
+          "reward_cost": 20.00,
+          "redeemed": false
+      }
+  },
+  {
+      "model": "cashtrayapi.reward",
+      "pk": 2,
+      "fields": {
+          "user": 2,
+          "reward_name": "Window Boxes",
+          "reward_cost": 75.75,
+          "redeemed": false
+      }
+  },
+  {
+      "model": "cashtrayapi.reward",
+      "pk": 3,
+      "fields": {
+          "user": 1,
+          "reward_name": "Rims",
+          "reward_cost": 300.12,
+          "redeemed": false
+      }
+  }
+]
