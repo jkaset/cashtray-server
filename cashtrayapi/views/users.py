@@ -77,6 +77,26 @@ class Users(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    def update(self, request, pk=None):
+        user = Nonsmoker.objects.get(user=request.auth.user)
+
+        nonsmoker = Nonsmoker()
+        nonsmoker.quit_date = request.data["quit_date"]
+        nonsmoker.cigs_per_day = request.data["cigs_per_day"]
+        nonsmoker.price_per_pack = request.data["price_per_pack"]
+        nonsmoker.cigs_per_pack = request.data["cigs_per_pack"]
+        nonsmoker.start_smoking_year = request.data["start_smoking_year"]
+
+        nonsmoker.save()
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+    def patch(self, request, pk=None):
+        user = Nonsmoker.objects.get(pk=pk)
+        user.quit_date = request.data['quit_date']
+        user.save()
+        
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
 
 class UserSerializer(serializers.ModelSerializer):
     """JSON serializer for Users

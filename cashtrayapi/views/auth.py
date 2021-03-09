@@ -21,9 +21,9 @@ def login_user(request):
     if request.method == 'POST':
 
         # Use the built-in authenticate method to verify
-        username = req_body['username']
+        email = req_body['email']
         password = req_body['password']
-        authenticated_user = authenticate(username=username, password=password)
+        authenticated_user = authenticate(email=email, password=password)
 
         # If authentication was successful, respond with their token
         if authenticated_user is not None:
@@ -38,7 +38,8 @@ def login_user(request):
                     {"valid": True, "token": token.key, "is_staff": False})
 
             return HttpResponse(data, content_type='application/json')
-
+        else:
+          return HttpResponse("no work")
 
 @csrf_exempt
 def register_user(request):
@@ -68,10 +69,12 @@ def register_user(request):
     # profile user and ref new user above
     cashtray_user = Nonsmoker.objects.create(
         user=new_user,
-        bio=req_body['bio'],
-        profile_image_url="",
-        created_on=datetime.now(),
-        active=req_body['active']
+        # quit_date=req_body['quit_date'],
+        # cigs_per_day=req_body['cigs_per_day'],
+        # price_per_pack=req_body['price_per_pack'],
+        # cigs_per_pack=req_body['cigs_per_pack'],
+        # start_smoking_year=req_body['start_smoking_year']
+        
     )
 
     # Commit the user to the database by saving it
