@@ -6,6 +6,9 @@ from rest_framework.authtoken.models import Token
 from django.views.decorators.csrf import csrf_exempt
 from cashtrayapi.models import Nonsmoker
 from datetime import datetime
+from rest_framework import status
+
+
 
 
 @csrf_exempt
@@ -16,6 +19,7 @@ def login_user(request):
     '''
 
     req_body = json.loads(request.body.decode())
+    
 
     # If the request is a HTTP POST, try to pull out the relevant info.
     if request.method == 'POST':
@@ -28,18 +32,24 @@ def login_user(request):
         # If authentication was successful, respond with their token
         if authenticated_user is not None:
             token = Token.objects.get(user=authenticated_user)
-
-            if authenticated_user.is_staff:
-                data = json.dumps(
-                    {"valid": True, "token": token.key, "is_staff": True})
-
-            else:
-                data = json.dumps(
-                    {"valid": True, "token": token.key, "is_staff": False})
-
+            data = json.dumps({"valid": True, "token": token.key})
             return HttpResponse(data, content_type='application/json')
+
         else:
-          return HttpResponse("no work")
+            # Bad login details were provided. So we can't log the user in.
+            data = json.dumps({"valid": False})
+            return HttpResponse(data, content_type='application/json')
+
+        #     if authenticated_user.is_staff:
+        #         data = json.dumps(
+        #             {"valid": True, "token": token.key, "is_staff": True})
+
+        #     else:
+        #         data = json.dumps(
+        #             {"valid": True, "token": token.key, "is_staff": False})
+
+        #     return HttpResponse(data, content_type='application/json')
+
 
 @csrf_exempt
 def register_user(request):
@@ -69,12 +79,11 @@ def register_user(request):
     # profile user and ref new user above
     cashtray_user = Nonsmoker.objects.create(
         user=new_user,
-        # quit_date=req_body['quit_date'],
-        # cigs_per_day=req_body['cigs_per_day'],
-        # price_per_pack=req_body['price_per_pack'],
-        # cigs_per_pack=req_body['cigs_per_pack'],
-        # start_smoking_year=req_body['start_smoking_year']
-        
+        quit_date=req_body['quit_date'],
+        cigs_per_day=req_body['cigs_per_day'],
+        price_per_pack=req_body['price_per_pack'],
+        cigs_per_pack=req_body['cigs_per_pack'],
+        start_smoking_year=req_body['start_smoking_year']    
     )
 
     # Commit the user to the database by saving it

@@ -11,7 +11,7 @@ from datetime import date
 from datetime import datetime
 from django.contrib.auth.models import User
 
-class Users(ViewSet):
+class Nonsmokers(ViewSet):
     """Users"""
 
     def retrieve(self, request, pk=None):
@@ -78,9 +78,10 @@ class Users(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, pk=None):
-        user = Nonsmoker.objects.get(user=request.auth.user)
+        
 
-        nonsmoker = Nonsmoker()
+        nonsmoker = Nonsmoker.objects.get(pk=pk)
+        
         nonsmoker.quit_date = request.data["quit_date"]
         nonsmoker.cigs_per_day = request.data["cigs_per_day"]
         nonsmoker.price_per_pack = request.data["price_per_pack"]
@@ -105,7 +106,7 @@ class UserSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'is_staff', 'username')
+        fields = ('id', 'first_name', 'last_name')
 
 class NonsmokerSerializer(serializers.ModelSerializer):
     """JSON serializer for Nonsmokers
@@ -117,5 +118,5 @@ class NonsmokerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Nonsmoker
-        fields = ('id', 'quit_date', 'cigs_per_day', 'price_per_pack', 'cigs_per_pack', 'start_smoking_year')
+        fields = ('user', 'id', 'quit_date', 'cigs_per_day', 'price_per_pack', 'cigs_per_pack', 'start_smoking_year')
         depth = 1

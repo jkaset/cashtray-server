@@ -13,7 +13,7 @@
       "model": "cashtrayapi.reward",
       "pk": 2,
       "fields": {
-          "user": 2,
+          "user": 1,
           "reward_name": "Window Boxes",
           "reward_cost": 75.75,
           "redeemed": false
