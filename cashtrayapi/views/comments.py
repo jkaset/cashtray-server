@@ -17,7 +17,7 @@ class Comments(ViewSet):
         # Set custom property, `my_comment` to True
         # if the logged in user is the author of the comment
         for comment in comments:
-            if user == comment.author:
+            if user == comment.commenter:
                     comment.my_comment=True
             else:
                 comment.my_comment=False
@@ -82,4 +82,4 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model=Comment
         fields=('id','recipient', 'commenter', 'comment', 'created_on', 'my_comment')
-        depth=2
+        depth=1

@@ -16,11 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.conf.urls import include
 from django.urls import path
-from cashtrayapi.views import register_user, login_user, Users, Rewards, Comments
+from cashtrayapi.views import register_user, login_user, Nonsmokers, Rewards, Comments
 from rest_framework import routers
 
 router = routers.DefaultRouter(trailing_slash=False)
-router.register(r'users', Users, 'user')
+router.register(r'nonsmokers', Nonsmokers, 'nonsmoker')
 router.register(r'rewards', Rewards, 'reward')
 router.register(r'comments', Comments, 'comment')
 
