@@ -128,7 +128,7 @@ class Nonsmokers(ViewSet):
         # client gets pushed to /
         # function in useEffect makes fetch call
         # fetch call goes to localhost/3000/nonsmokers/home
-        # auth token is on request
+        # auth token is on requestgpo 
         # use the auth token to get the nonsmoker where user=req/aut/user...
         user = Nonsmoker.objects.get(user=request.auth.user)
         # serialize nonsmoker
