@@ -8,8 +8,9 @@ from rest_framework import serializers
 from rest_framework import status
 from cashtrayapi.models import Comment, Nonsmoker, Reward
 from datetime import date
-from datetime import datetime
+from datetime import datetime, timezone
 from django.contrib.auth.models import User
+
 
 class Nonsmokers(ViewSet):
     """Users"""
@@ -35,12 +36,36 @@ class Nonsmokers(ViewSet):
         Returns:
             Response -- JSON serialized list of Users
         """
-        # Get all users from the database
-        cashtray_user = Nonsmoker.objects.all()
 
-        
+        # def utc2local (utc):
+        #     epoch = time.mktime(utc.timetuple())
+        #     offset = datetime.fromtimestamp (epoch) - datetime.utcfromtimestamp (epoch)
+        #     return utc + offset
+
+        # Get all users from the database
+        cashtray_users = Nonsmoker.objects.all()
+        current_time = datetime.utcnow().astimezone()
+      
+        print(current_time)
+       
+      
+        for user in cashtray_users:
+            # free = 0
+            user.time_smoke_free = ( current_time - user.quit_date).days
+
+            # if 'days' in user.time_smoke_free:
+            #    free += user.time_smoke_free.days * 24
+
+        # nonsmoker=self.request.query_params.get("user_token", None)
+        # if nonsmoker is not None:
+        #     cashtray_users = cashtray_users.objects.get(user=User.objects.get(auth_token=nonsmoker))
+
+        nonsmoker = Nonsmoker.objects.get(user=request.auth.user)
+        cashtray_users = {}
+        cashtray_users["nonsmoker"] = nonsmoker.data
+
         serializer = NonsmokerSerializer(
-        cashtray_user, many=True, context={'request': request})
+            cashtray_users, many=True, context={'request': request})
         return Response(serializer.data)
 
     def create(self, request):
@@ -98,6 +123,22 @@ class Nonsmokers(ViewSet):
         
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
+    @action(methods=['get'], detail=False)
+    def home(self, request, pk=None):
+        # client gets pushed to /
+        # function in useEffect makes fetch call
+        # fetch call goes to localhost/3000/nonsmokers/home
+        # auth token is on request
+        # use the auth token to get the nonsmoker where user=req/aut/user...
+        user = Nonsmoker.objects.get(user=request.auth.user)
+        # serialize nonsmoker
+
+
+        serializer = NonsmokerSerializer(
+        user, many=False, context={'request': request})
+       
+        # send nonsmoker to client
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class UserSerializer(serializers.ModelSerializer):
     """JSON serializer for Users
@@ -106,7 +147,7 @@ class UserSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name')
+        fields = ('first_name', 'last_name')
 
 class NonsmokerSerializer(serializers.ModelSerializer):
     """JSON serializer for Nonsmokers
@@ -118,5 +159,5 @@ class NonsmokerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Nonsmoker
-        fields = ('user', 'id', 'quit_date', 'cigs_per_day', 'price_per_pack', 'cigs_per_pack', 'start_smoking_year')
+        fields = ('user', 'id', 'quit_date', 'cigs_per_day', 'price_per_pack', 'cigs_per_pack', 'start_smoking_year', 'time_smoke_free')
         depth = 1
