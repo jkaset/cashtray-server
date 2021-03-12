@@ -15,15 +15,16 @@ class Rewards(ViewSet):
         Returns:
             Response -- JSON serialized list of games
         """
-        # Get all post records from the database
-        rewards = Reward.objects.get(user=request.auth.user)
-        rewards = RewardSerializer(
-          rewards, many=True, context={'request': request}
-        )
-
-        return Response(rewards.data)
+        #grab currently logged in user
+        user = Nonsmoker.objects.get(user=request.auth.user)
+        rewards = Reward.objects.filter(user=user)
+        
        
 
+        #    user = Token.objects.get(key = post.user)
+        serializer = RewardSerializer(
+            rewards, many=True, context={'request': request})
+        return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
         """Handle GET requests for single reward
@@ -33,8 +34,6 @@ class Rewards(ViewSet):
         try:
             # `pk` is a parameter to this function, and
             # Django parses it from the URL route parameter
-            #   
-            #
             # The `2` at the end of the route becomes `pk`
             reward = Reward.objects.get(pk=pk)
             serializer = RewardSerializer(reward, context={'request': request})
@@ -49,16 +48,18 @@ class Rewards(ViewSet):
         """
 
         # Uses the token passed in the `Authorization` header
-        nonsmoker = Nonsmoker.objects.get(user=request.auth.user)
+        user = Nonsmoker.objects.get(user=request.auth.user)
 
         # Create a new Python instance of the Post class
         # and set its properties from what was sent in the
         # body of the request from the client.
         reward = Reward()
+        reward.user = user
         reward.reward_name = request.data["reward_name"]
         reward.reward_cost = request.data["reward_cost"]
-        reward.redeemed = request.data["redeemed"]
-        reward.nonsmoker = nonsmoker
+        reward.redeemed = False
+        
+
         
 
         # Try to save the new post to the database, then
@@ -104,18 +105,32 @@ class Rewards(ViewSet):
         # creating a new instance of Post, get the post record
         # from the database whose primary key is `pk`
         reward = Reward.objects.get(pk=pk)
-        reward.reward_name = request.data["reward_name"]
-        reward.reward_cost = request.data["reward_cost"]
-        reward.redeemed = request.data["redeemed"]
-        reward.nonsmoker = nonsmoker
+
+        reward.redeemed = True
+
         reward.save()
 
         # 204 status code means everything worked but the
         # server is not sending back any data in the response
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
+    @action(methods=['get'], detail=True)
+    def redeem(self, request, pk=None):
+        reward = Reward.objects.get(pk=pk)
+
+        reward.redeemed = True
+
+        reward.save()
+
+        # 204 status code means everything worked but the
+        # server is not sending back any data in the response
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+
+
+
 class RewardSerializer(serializers.ModelSerializer):
     """JSON serializer for gamer's related Django user"""
     class Meta:
         model = Reward
-        fields = ('reward_name', 'reward_cost', 'redeemed')
+        fields = ('id', 'user', 'reward_name', 'reward_cost', 'redeemed')
