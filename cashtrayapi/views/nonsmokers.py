@@ -26,6 +26,15 @@ class Nonsmokers(ViewSet):
         else:
             cashtray_user = Nonsmoker.objects.get(pk=pk)
 
+
+    
+        current_time = datetime.utcnow().astimezone()
+      
+        print(current_time)
+
+        cashtray_user.time_smoke_free = ( current_time - cashtray_user.quit_date).days
+            
+
         serializer = NonsmokerSerializer(
             cashtray_user, context={'request': request})
         return Response(serializer.data)
@@ -43,7 +52,7 @@ class Nonsmokers(ViewSet):
         #     return utc + offset
 
         # Get all users from the database
-        cashtray_users = Nonsmoker.objects.all()
+        cashtray_users = Nonsmoker.objects.all().order_by('quit_date')
         current_time = datetime.utcnow().astimezone()
       
         print(current_time)
@@ -56,13 +65,11 @@ class Nonsmokers(ViewSet):
             # if 'days' in user.time_smoke_free:
             #    free += user.time_smoke_free.days * 24
 
-        # nonsmoker=self.request.query_params.get("user_token", None)
-        # if nonsmoker is not None:
-        #     cashtray_users = cashtray_users.objects.get(user=User.objects.get(auth_token=nonsmoker))
 
-        nonsmoker = Nonsmoker.objects.get(user=request.auth.user)
-        cashtray_users = {}
-        cashtray_users["nonsmoker"] = nonsmoker.data
+        # nonsmoker = Nonsmoker.objects.get(user=request.auth.user)
+        # cashtray_users = {}
+        # cashtray_users["nonsmoker"] = nonsmoker.data
+        
 
         serializer = NonsmokerSerializer(
             cashtray_users, many=True, context={'request': request})
@@ -103,18 +110,31 @@ class Nonsmokers(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, pk=None):
-        
+  
+        user = Nonsmoker.objects.get(pk=pk)
 
-        nonsmoker = Nonsmoker.objects.get(pk=pk)
         
-        nonsmoker.quit_date = request.data["quit_date"]
-        nonsmoker.cigs_per_day = request.data["cigs_per_day"]
-        nonsmoker.price_per_pack = request.data["price_per_pack"]
-        nonsmoker.cigs_per_pack = request.data["cigs_per_pack"]
-        nonsmoker.start_smoking_year = request.data["start_smoking_year"]
+        # user = Nonsmoker.objects.get(user=request.auth.user)
+        current_time = datetime.utcnow().astimezone()
 
-        nonsmoker.save()
-        return Response({}, status=status.HTTP_204_NO_CONTENT)
+        user.quit_date = current_time
+
+        user.time_smoke_free = ( current_time - user.quit_date).days
+
+        serializer = NonsmokerSerializer(
+        user, many=False, context={'request': request})
+       
+        # send nonsmoker to client
+        return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)    
+        
+        # nonsmoker.quit_date = request.data["quit_date"]
+        # nonsmoker.cigs_per_day = request.data["cigs_per_day"]
+        # nonsmoker.price_per_pack = request.data["price_per_pack"]
+        # nonsmoker.cigs_per_pack = request.data["cigs_per_pack"]
+        # nonsmoker.start_smoking_year = request.data["start_smoking_year"]
+
+        # nonsmoker.save()
+        # return Response({}, status=status.HTTP_204_NO_CONTENT)
 
     def patch(self, request, pk=None):
         user = Nonsmoker.objects.get(pk=pk)
@@ -123,7 +143,7 @@ class Nonsmokers(ViewSet):
         
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
-    @action(methods=['get'], detail=False)
+    @action(methods=['get', 'retrieve'], detail=False)
     def home(self, request, pk=None):
         # client gets pushed to /
         # function in useEffect makes fetch call
@@ -132,13 +152,36 @@ class Nonsmokers(ViewSet):
         # use the auth token to get the nonsmoker where user=req/aut/user...
         user = Nonsmoker.objects.get(user=request.auth.user)
         # serialize nonsmoker
+        current_time = datetime.utcnow().astimezone()
+      
+        print(current_time)
 
+        user.time_smoke_free = ( current_time - user.quit_date).days
 
         serializer = NonsmokerSerializer(
         user, many=False, context={'request': request})
        
         # send nonsmoker to client
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['put', 'get'], detail=False)
+    def oops(self, request, pk=None):
+        #get user
+        #change quit_date to date_now (current time) front end sets single smoker
+        user = Nonsmoker.objects.get(user=request.auth.user)
+        
+        # serialize nonsmoker
+        current_time = datetime.utcnow().astimezone()
+
+        user.quit_date = current_time
+
+        user.time_smoke_free = ( current_time - user.quit_date).days
+        user.save()
+        serializer = NonsmokerSerializer(
+        user, many=False, context={'request': request})
+       
+        # send nonsmoker to client
+        return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
 
 class UserSerializer(serializers.ModelSerializer):
     """JSON serializer for Users
