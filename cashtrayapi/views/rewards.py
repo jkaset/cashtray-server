@@ -49,6 +49,7 @@ class Rewards(ViewSet):
 
         # Uses the token passed in the `Authorization` header
         user = Nonsmoker.objects.get(user=request.auth.user)
+        print(user)
 
         # Create a new Python instance of the Post class
         # and set its properties from what was sent in the
@@ -83,6 +84,7 @@ class Rewards(ViewSet):
         """
         try:
             reward = Reward.objects.get(pk=pk)
+            print(reward)
             reward.delete()
 
             return Response({}, status=status.HTTP_204_NO_CONTENT)
