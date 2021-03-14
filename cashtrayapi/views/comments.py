@@ -82,4 +82,4 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model=Comment
         fields=('id','recipient', 'commenter', 'comment', 'created_on', 'my_comment')
-        depth=1
+        depth=2

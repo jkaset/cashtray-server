@@ -19,7 +19,7 @@ class Rewards(ViewSet):
         user = Nonsmoker.objects.get(user=request.auth.user)
         rewards = Reward.objects.filter(user=user)
         
-       
+
 
         #    user = Token.objects.get(key = post.user)
         serializer = RewardSerializer(
@@ -135,4 +135,4 @@ class RewardSerializer(serializers.ModelSerializer):
     """JSON serializer for gamer's related Django user"""
     class Meta:
         model = Reward
-        fields = ('id', 'user', 'reward_name', 'reward_cost', 'redeemed')
+        fields = ('id', 'user', 'reward_name', 'reward_cost', 'redeemed', 'available_cash')

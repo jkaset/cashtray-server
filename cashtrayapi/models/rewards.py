@@ -5,3 +5,4 @@ class Reward(models.Model):
     reward_name = models.CharField(max_length=50)
     reward_cost = models.FloatField()
     redeemed = models.BooleanField(default=False)
+

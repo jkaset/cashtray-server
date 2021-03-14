@@ -92,56 +92,7 @@ class Nonsmokers(ViewSet):
         except ValidationError as ex:
             return Response({"reason": ex.message}, status=status.HTTP_400_BAD_REQUEST)
 
-    # def destroy(self, request, pk=None):
-    #     """Handle DELETE requests for a single game
-    #     Returns:
-    #         Response -- 200, 404, or 500 status code
-    #     """
-    #     try:
-    #         nonsmoker = Nonsmoker.objects.get(user=request.auth.user)
-    #         nonsmoker.delete()
 
-    #         return Response({}, status=status.HTTP_204_NO_CONTENT)
-
-    #     except Nonsmoker.DoesNotExist as ex:
-    #         return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
-
-    #     except Exception as ex:
-    #         return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    # def update(self, request, pk=None):
-  
-    #     user = Nonsmoker.objects.get(pk=pk)
-
-        
-    #     # user = Nonsmoker.objects.get(user=request.auth.user)
-    #     current_time = datetime.utcnow().astimezone()
-
-    #     user.quit_date = current_time
-
-    #     user.time_smoke_free = ( current_time - user.quit_date).days
-
-    #     serializer = NonsmokerSerializer(
-    #     user, many=False, context={'request': request})
-       
-    #     # send nonsmoker to client
-    #     return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)    
-        
-        # nonsmoker.quit_date = request.data["quit_date"]
-        # nonsmoker.cigs_per_day = request.data["cigs_per_day"]
-        # nonsmoker.price_per_pack = request.data["price_per_pack"]
-        # nonsmoker.cigs_per_pack = request.data["cigs_per_pack"]
-        # nonsmoker.start_smoking_year = request.data["start_smoking_year"]
-
-        # nonsmoker.save()
-        # return Response({}, status=status.HTTP_204_NO_CONTENT)
-
-    # def patch(self, request, pk=None):
-    #     user = Nonsmoker.objects.get(pk=pk)
-    #     user.quit_date = request.data['quit_date']
-    #     user.save()
-        
-    #     return Response({}, status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['get', 'retrieve'], detail=False)
     def home(self, request, pk=None):
@@ -153,9 +104,9 @@ class Nonsmokers(ViewSet):
         user = Nonsmoker.objects.get(user=request.auth.user)
         # serialize nonsmoker
         current_time = datetime.utcnow().astimezone()
-      
-        print(current_time)
 
+        print(current_time)
+ 
         user.time_smoke_free = ( current_time - user.quit_date).days
 
         serializer = NonsmokerSerializer(
