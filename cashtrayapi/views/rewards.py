@@ -135,4 +135,4 @@ class RewardSerializer(serializers.ModelSerializer):
     """JSON serializer for gamer's related Django user"""
     class Meta:
         model = Reward
-        fields = ('id', 'user', 'reward_name', 'reward_cost', 'redeemed', 'available_cash')
+        fields = ('id', 'user', 'reward_name', 'reward_cost', 'redeemed')
