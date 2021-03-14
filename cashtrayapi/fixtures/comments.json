@@ -3,7 +3,7 @@
       "model": "cashtrayapi.comment",
       "pk": 1,
       "fields": {
-          "recipient": 1,
+          "recipient": 4,
           "commenter": 1,
           "comment": "The worst is over! Keep going!",
           "created_on": "2021-03-14"

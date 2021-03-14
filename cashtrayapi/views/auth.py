@@ -40,15 +40,7 @@ def login_user(request):
             data = json.dumps({"valid": False})
             return HttpResponse(data, content_type='application/json')
 
-        #     if authenticated_user.is_staff:
-        #         data = json.dumps(
-        #             {"valid": True, "token": token.key, "is_staff": True})
-
-        #     else:
-        #         data = json.dumps(
-        #             {"valid": True, "token": token.key, "is_staff": False})
-
-        #     return HttpResponse(data, content_type='application/json')
+     
 
 
 @csrf_exempt
