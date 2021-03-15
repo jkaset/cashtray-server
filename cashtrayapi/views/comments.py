@@ -7,6 +7,7 @@ from rest_framework import serializers
 from rest_framework import status
 from cashtrayapi.models import Comment, Nonsmoker
 from datetime import date
+from django.contrib.auth.models import User
 
 class Comments(ViewSet):
     def list(self, request):
@@ -49,15 +50,6 @@ class Comments(ViewSet):
 
         try:
             comment = Comment.objects.get(pk=pk)
-            user = Nonsmoker.objects.get(user=request.auth.user)
-
-            # Set custom property, `my_comment` to True
-            # if the logged in user is the author of the comment
-            if user == comment.commenter:
-                comment.my_comment=True
-            else:
-                comment.my_comment=False
-
             serializer = CommentSerializer(comment, context={'request': request})
             return Response(serializer.data)
         except Exception as ex:
@@ -77,9 +69,25 @@ class Comments(ViewSet):
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+class CommentUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name']
+        depth = 1
+
+
+
+class CommentNonsmokerSerializer(serializers.ModelSerializer):
+
+    user = CommentUserSerializer(many=False)
+
+    class Meta:
+        model = Nonsmoker
+        fields = ['user']
+        depth = 2
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model=Comment
-        fields=('id','recipient', 'commenter', 'comment', 'created_on', 'my_comment')
+        fields=('id','recipient', 'commenter', 'comment', 'created_on')
         depth=2
