@@ -17,7 +17,7 @@ class Rewards(ViewSet):
         """
         #grab currently logged in user
         user = Nonsmoker.objects.get(user=request.auth.user)
-        rewards = Reward.objects.filter(user=user)
+        rewards = Reward.objects.filter(user=user).order_by('reward_cost')
         
 
 
