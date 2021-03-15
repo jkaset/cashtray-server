@@ -121,6 +121,8 @@ class Rewards(ViewSet):
         reward = Reward.objects.get(pk=pk)
 
         reward.redeemed = True
+      
+
 
         reward.save()
 
