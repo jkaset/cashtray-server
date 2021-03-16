@@ -18,3 +18,4 @@ class Nonsmoker(models.Model):
     @time_smoke_free.setter
     def time_smoke_free(self, value):
         self.__time_smoke_free = value
+
