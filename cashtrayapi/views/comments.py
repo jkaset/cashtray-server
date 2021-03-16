@@ -13,11 +13,19 @@ class Comments(ViewSet):
     def list(self, request):
 
         comments=Comment.objects.all()
-        user = Nonsmoker.objects.get(user=request.auth.user)
+        nonsmoker = Nonsmoker.objects.get(user=request.auth.user)
+        
+
 
         recipient = self.request.query_params.get('recipient_id', None)
         if recipient is not None: 
             comments = comments.filter(recipient_id=recipient)
+
+        for comment in comments:
+            if nonsmoker == comment.commenter:
+                comment.my_comment=True
+            else:
+                comment.my_comment=False
 
         serializer = CommentSerializer(comments, many=True, context= {'request': request})
         return Response(serializer.data)
@@ -74,17 +82,8 @@ class CommentUserSerializer(serializers.ModelSerializer):
 
 
 
-class CommentNonsmokerSerializer(serializers.ModelSerializer):
-
-    user = CommentUserSerializer(many=False)
-
-    class Meta:
-        model = Nonsmoker
-        fields = ['user']
-        depth = 2
-
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model=Comment
-        fields=('id','recipient', 'commenter', 'comment', 'created_on')
+        fields=('id','recipient', 'commenter', 'comment', 'created_on', 'my_comment')
         depth=2

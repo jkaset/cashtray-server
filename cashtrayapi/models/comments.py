@@ -6,3 +6,10 @@ class Comment(models.Model):
     comment = models.CharField(max_length=500)
     created_on = models.DateField()
 
+    @property
+    def my_comment(self):
+        return self.__my_comment
+
+    @my_comment.setter
+    def my_comment(self, value):
+        self.__my_comment = value
