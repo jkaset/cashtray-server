@@ -15,25 +15,22 @@ class Comments(ViewSet):
         comments=Comment.objects.all()
         user = Nonsmoker.objects.get(user=request.auth.user)
 
-        # Set custom property, `my_comment` to True
-        # if the logged in user is the author of the comment
-        for comment in comments:
-            if user == comment.commenter:
-                    comment.my_comment=True
-            else:
-                comment.my_comment=False
+        recipient = self.request.query_params.get('recipient_id', None)
+        if recipient is not None: 
+            comments = comments.filter(recipient_id=recipient)
 
         serializer = CommentSerializer(comments, many=True, context= {'request': request})
         return Response(serializer.data)
     
-    def create(self, request):
-       
+    def create(self, request, pk=None):
+        # recipient = Nonsmoker.objects.get(pk=pk)
         commenter= Nonsmoker.objects.get(user=request.auth.user)
-        recipient= Nonsmoker.objects.get(pk=request.data["nonsmoker_id"])
-
+        # recipient = self.request.query_params.get('recipient_id')
+        
+        # create a new Python instance of the Comment class with properties  REQUEST client 
 
         comment=Comment()
-        comment.recipient=recipient
+        comment.recipient_id=request.data["recipient_id"]
         comment.commenter=commenter
         comment.comment=request.data["comment"]
         comment.created_on= date.today()

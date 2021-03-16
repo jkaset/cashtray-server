@@ -153,5 +153,5 @@ class NonsmokerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Nonsmoker
-        fields = ('user', 'id', 'quit_date', 'cigs_per_day', 'price_per_pack', 'cigs_per_pack', 'start_smoking_year', 'time_smoke_free')
+        fields = ('id', 'user', 'quit_date', 'cigs_per_day', 'price_per_pack', 'cigs_per_pack', 'start_smoking_year', 'time_smoke_free')
         depth = 1
