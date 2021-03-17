@@ -14,8 +14,6 @@ class Comments(ViewSet):
 
         comments=Comment.objects.all()
         nonsmoker = Nonsmoker.objects.get(user=request.auth.user)
-        
-
 
         recipient = self.request.query_params.get('recipient_id', None)
         if recipient is not None: 
