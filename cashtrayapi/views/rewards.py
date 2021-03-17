@@ -49,7 +49,7 @@ class Rewards(ViewSet):
 
         # Uses the token passed in the `Authorization` header
         user = Nonsmoker.objects.get(user=request.auth.user)
-        print(user)
+      
 
         # Create a new Python instance of the Rewardclass
         # and set its properties from what was sent in the
@@ -121,6 +121,20 @@ class Rewards(ViewSet):
         reward = Reward.objects.get(pk=pk)
 
         reward.redeemed = True
+      
+
+
+        reward.save()
+
+        # 204 status code means everything worked but the
+        # server is not sending back any data in the response
+        return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+    @action(methods=['get'], detail=True)
+    def unredeem(self, request, pk=None):
+        reward = Reward.objects.get(pk=pk)
+
+        reward.redeemed = False
       
 
 
