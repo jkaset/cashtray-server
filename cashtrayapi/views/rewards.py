@@ -84,7 +84,7 @@ class Rewards(ViewSet):
         """
         try:
             reward = Reward.objects.get(pk=pk)
-            print(reward)
+           
             reward.delete()
 
             return Response({}, status=status.HTTP_204_NO_CONTENT)
@@ -135,9 +135,7 @@ class Rewards(ViewSet):
         reward = Reward.objects.get(pk=pk)
 
         reward.redeemed = False
-      
-
-
+    
         reward.save()
 
         # 204 status code means everything worked but the

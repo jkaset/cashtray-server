@@ -30,7 +30,7 @@ class Nonsmokers(ViewSet):
     
         current_time = datetime.utcnow().astimezone()
       
-        print(current_time)
+      
 
         cashtray_user.time_smoke_free = ( current_time - cashtray_user.quit_date).days
             
@@ -55,7 +55,6 @@ class Nonsmokers(ViewSet):
         cashtray_users = Nonsmoker.objects.all().order_by('quit_date')
         current_time = datetime.utcnow().astimezone()
       
-        print(current_time)
        
       
         for user in cashtray_users:
@@ -105,7 +104,6 @@ class Nonsmokers(ViewSet):
         # serialize nonsmoker
         current_time = datetime.utcnow().astimezone()
 
-        print(current_time)
  
         user.time_smoke_free = ( current_time - user.quit_date).days
 
