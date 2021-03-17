@@ -51,25 +51,25 @@ class Rewards(ViewSet):
         user = Nonsmoker.objects.get(user=request.auth.user)
         print(user)
 
-        # Create a new Python instance of the Post class
+        # Create a new Python instance of the Rewardclass
         # and set its properties from what was sent in the
         # body of the request from the client.
+        #invoking Reward class created an instance of that class. And instance of a class is a python object. Setting values :
         reward = Reward()
         reward.user = user
         reward.reward_name = request.data["reward_name"]
         reward.reward_cost = request.data["reward_cost"]
         reward.redeemed = False
-        
 
-        
 
-        # Try to save the new post to the database, then
+        # .save makes a SQL insert query to the database, then 
         # serialize the post instance as JSON, and send the
         # JSON as a response to the client request
+        # 
         try:
             reward.save()
             serializer = RewardSerializer(reward, context={'request': request})
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         # If anything went wrong, catch the exception and
         # send a response with a 400 status code to tell the
